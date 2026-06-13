@@ -70,28 +70,57 @@ public class EmployeeController {
         return ResponseEntity.ok(data);
     }
     
+//    @PostMapping
+//    public ResponseEntity<?> addEmployee(@RequestBody Employee emp, HttpSession session) {
+//        String role = (String) session.getAttribute("role");
+//        if (role == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Login required"));
+//        }
+//
+//        
+//        if (role.equalsIgnoreCase("EMPLOYEE") || role.equalsIgnoreCase("ADMIN")) {
+//            emp.setId(0); // 👈 ensure Hibernate treats this as a NEW record
+//            Employee saved = repo.save(emp);
+//            User user1 = new User();
+//            user1.setUsername(emp.getEmail());
+//            user1.setPassword("12345");
+//            user1.setRole("EMPLOYEE");
+//            repoUser.save(user1);
+//            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+//        }
+//
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Not authorized"));
+//    }
+    //change on 13-06-2026
     @PostMapping
     public ResponseEntity<?> addEmployee(@RequestBody Employee emp, HttpSession session) {
+
         String role = (String) session.getAttribute("role");
+
         if (role == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Login required"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Login required"));
         }
 
-        
-        if (role.equalsIgnoreCase("EMPLOYEE") || role.equalsIgnoreCase("ADMIN")) {
-            emp.setId(0); // 👈 ensure Hibernate treats this as a NEW record
-            Employee saved = repo.save(emp);
-            User user1 = new User();
-            user1.setUsername(emp.getEmail());
-            user1.setPassword("12345");
-            user1.setRole("EMPLOYEE");
-            repoUser.save(user1);
-            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        if (!role.equalsIgnoreCase("ADMIN")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "Only Admin can add employees"));
         }
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Not authorized"));
+        emp.setId(0);
+
+        Employee saved = repo.save(emp);
+
+        User user = new User();
+        user.setUsername(emp.getEmail());
+        user.setPassword("12345");
+        user.setRole("EMPLOYEE");
+
+        repoUser.save(user);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(saved);
     }
-
 
    
     @PutMapping("/{id}")

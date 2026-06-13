@@ -20,7 +20,7 @@ public class AdminController {
     private UserRepository userRepository;
 
     // =============================
-    // ✅ ADMIN DASHBOARD
+    // ADMIN DASHBOARD
     // =============================
     @GetMapping("/admin")
     public ResponseEntity<?> getAdminDashboard() {
@@ -36,7 +36,7 @@ public class AdminController {
     }
 
     // =============================
-    // ✅ GET ALL USERS
+    // GET ALL USERS
     // =============================
     @GetMapping("/users")
     public List<User> getAllUsers() {
@@ -44,7 +44,7 @@ public class AdminController {
     }
 
     // =============================
-    // ✅ ADD USER
+    // ADD USER
     // =============================
     @PostMapping("/users")
     public User addUser(@RequestBody User user) {
@@ -52,7 +52,7 @@ public class AdminController {
     }
 
     // =============================
-    // ✅ DELETE USER
+    // DELETE USER
     // =============================
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable int id) {
